@@ -21,6 +21,9 @@ public:
 	int rhs;
 
 	int type;
+
+	bool is_init;
+	bool is_on_road;
 	bool is_in_closetable;
 	bool is_in_opentable;
 	CNode *backPointnode;

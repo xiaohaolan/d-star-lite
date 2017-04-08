@@ -9,7 +9,9 @@
 #include <afxwin.h> //类的序列化
 #include <list>
 #include "Node.h"
-#include "Cmpare.h"
+#include <time.h>
+
+//#include "Cmpare.h"
 
 using namespace std;
 using namespace cv;
@@ -31,7 +33,10 @@ using namespace cv;
 class CDlite
 {
 public:
-	CNode nd1;
+	
+	clock_t start, finish;
+	double duration;
+
 	CNode node[MAPHEIGHT][MAPWIDTH];
 
 	std::list<CNode *> openTable;
@@ -39,10 +44,10 @@ public:
 	int openNodecount = 0;
 	int closeNodecount = 0;
 
-	int start_x;
-	int start_y;
-	int end_x;
-	int end_y;
+	static int start_x;
+	static int start_y;
+	static int end_x;
+	static int end_y;
 
 	Mat atom_image = Mat::zeros(MAPWIDTH, MAPHEIGHT, CV_8UC3);
 
@@ -51,8 +56,43 @@ public:
 	CNode *currNode;
 
 	CDlite(void);
-	CDlite(int startx, int starty, int endx, int endy);
 	~CDlite();
+
+	class Cmpare
+	{
+	public:
+		Cmpare()
+		{
+		}
+		~Cmpare()
+		{
+		}
+		//int h(CNode nd1, CNode nd2);
+		//bool operator()(const CNode* nd1, const CNode* nd2) const;
+
+		int h(const CNode* nd1, int start_x,int start_y) const
+		{
+			int dis;
+
+			dis = sqrt(pow((double)abs(nd1->x - start_x)*2, 2) + pow((double)abs(nd1->y - start_y)*2, 2));
+
+			return dis;
+		}
+
+
+		bool operator()(const CNode* nd1, const CNode* nd2) const
+		{
+			int key_a1, key_a2, key_b1, key_b2;
+
+			key_a1 = min(nd1->g, nd1->rhs) + h(nd1, start_x, start_y);
+			key_a2 = min(nd1->g, nd1->rhs);
+
+			key_b1 = min(nd2->g, nd2->rhs) + h(nd2, start_x, start_y);
+			key_b2 = min(nd2->g, nd2->rhs);
+
+			return (key_a1 < key_b1);// && (key_a2 < key_b2);
+		}
+	};
 
 	void pathPlanning();
 	void showDetails();

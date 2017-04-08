@@ -1,12 +1,8 @@
 ﻿#include "Dlite.h"
 
 
-CDlite::CDlite(int startx, int starty, int endx, int endy)
+CDlite::CDlite()
 {
-	start_x = startx;
-	start_y = starty;
-	end_x = endx;
-	end_y = endy;
 }
 
 CDlite::~CDlite()
@@ -15,8 +11,10 @@ CDlite::~CDlite()
 
 void CDlite::pathPlanning()
 {
+	start = clock();
+
 	mapInit();
-	drawWindow();
+	
 
 	startNode = &node[start_x][start_y];
 	endNode = &node[end_x][end_y];
@@ -28,14 +26,20 @@ void CDlite::pathPlanning()
 		return;
 	}
 
-	//roadInit();
-	nodeDeSerialization();
+	roadInit();
+	finish = clock();
+	duration = (double)(finish - start) / CLOCKS_PER_SEC;
+	cout <<"用时"<< duration <<"s"<< endl;
+	
+	//nodeSerialization();
+	drawWindow();
+	//nodeDeSerialization();
 //	readMap();
 }
 
 int CDlite::readMap()
 {
-	//读取地图文件map.dat
+	//读取地图文件map.txt
 
 	fstream map("map.txt");
 	if (!map.is_open())
@@ -64,6 +68,18 @@ int CDlite::readMap()
 void CDlite::drawWindow()
 {
 	const char atom_window[16] = "Drawing 1: Atom";
+	int i, j;
+
+	for (i = 0; i<MAPHEIGHT; i++)
+	{
+		for (j = 0; j < MAPWIDTH; j++)
+		{
+			if (node[i][j].is_init == TRUE)
+			{
+				MyFilledCircle(atom_image, Point(i, j), Scalar(240, 251, 255));
+			}
+		}
+	}
 
 	MyFilledCircle(atom_image, Point(start_x, start_y), Scalar(255, 0, 0));
 	MyFilledCircle(atom_image, Point(end_x, end_y), Scalar(0, 0, 255));
@@ -323,7 +339,7 @@ void CDlite::MyFilledCircle(Mat img, Point center, Scalar color)
 
 	circle(img,
 		center,
-		5,
+		3,
 		color,
 		thickness,
 		lineType);

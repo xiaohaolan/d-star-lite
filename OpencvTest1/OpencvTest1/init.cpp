@@ -11,8 +11,9 @@ void CDlite::roadInit()
 
 	while (CalculateKey(openTable.front()) < CalculateKey(startNode) || startNode->rhs != startNode->g)
 	{
-		openTable.sort(Cmpare());
 		currNode = openTable.front();
+
+		currNode->is_init = TRUE;
 
 		if (currNode->x % 10 == 0 && currNode->y % 10 == 0)
 		{
@@ -33,9 +34,8 @@ void CDlite::roadInit()
 
 		//currNode->is_in_closetable = TRUE;
 		delete_from_opentable(currNode->x, currNode->y);
+		openTable.sort(Cmpare());
 	}
-
-	nodeSerialization();
 
 }
 
@@ -56,7 +56,7 @@ void CDlite::nodeSerialization()
 			{
 				arStore << &node[i][j];
 			}
-			if (i % 20 == 0)
+			if (i % 50 == 0)
 			{
 				cout << i/10 << "% 存储中……" << endl;
 			}

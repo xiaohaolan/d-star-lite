@@ -5,15 +5,20 @@ using namespace std;
 
 #define MAPHEIGHT 1000
 #define MAPWIDTH 1000
-#define STARTX 960
-#define STARTY 710
-#define ENDX 950
-#define ENDY 700
+#define STARTX 530
+#define STARTY 530
+#define ENDX 500
+#define ENDY 500
 
+int CDlite::start_x = STARTX;
+int CDlite::start_y = STARTY;
+int CDlite::end_x = ENDX;
+int CDlite::end_y = ENDY;
 
 int main()
 {
-	CDlite *Dlite = new CDlite(STARTX, STARTY, ENDX, ENDY);
+
+	CDlite *Dlite = new CDlite();
 	Dlite->pathPlanning();//起始点终止点坐标
 	//Dlite.showResult();
 	//Dlite.showDetails();
